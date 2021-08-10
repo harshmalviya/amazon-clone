@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { useState } from "react";
 import { StarIcon } from "@heroicons/react/solid";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../slices/cartSlice";
 
 const MAX_RATING = 5;
 const MIN_RATING = 1;
@@ -10,6 +12,22 @@ function Product({ id, title, price, description, category, image }) {
   );
 
   const [hasPrime] = useState(Math.random() < 0.5);
+  const dispatch = useDispatch();
+
+  const addItemToCart = () => {
+    const product = {
+      id,
+      title,
+      price,
+      description,
+      category,
+      image,
+      rating, 
+      hasPrime
+    };
+    dispatch(addToCart(product));
+  };
+
   return (
     <div className="relative flex flex-col m-5 bg-white z-30 p-10">
       <p className="absolute top-2 right-2 text-xs italic text-gray-400">
@@ -20,7 +38,7 @@ function Product({ id, title, price, description, category, image }) {
       <div className="flex">
         {Array(rating)
           .fill()
-          .map(() => (
+          .map((_, i) => (
             <StarIcon className="h-5 text-yellow-500" />
           ))}
       </div>
@@ -34,7 +52,9 @@ function Product({ id, title, price, description, category, image }) {
           <p className="text-xs text-gray-500">Free Next-day Delivery</p>
         </div>
       )}
-      <button className="mt-auto button">Add to Cart</button>
+      <button onClick={addItemToCart} className="mt-auto button">
+        Add to Cart
+      </button>
     </div>
   );
 }
